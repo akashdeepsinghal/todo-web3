@@ -8,8 +8,6 @@ const tokens = (n) => {
 describe("TodoWeb3", () => {
   let todoWeb3;
   let deployer;
-  const CONTRACT_NAME = "GodaddyWeb3";
-  const CONTRACT_SYMBOL = "GW3";
   const CONTENT = "Get vegetables";
   beforeEach(async () => {
     // Setup accounts
@@ -17,7 +15,7 @@ describe("TodoWeb3", () => {
 
     // Deploy contract
     const TodoWeb3 = await ethers.getContractFactory("TodoWeb3");
-    todoWeb3 = await TodoWeb3.deploy(CONTRACT_NAME, CONTRACT_SYMBOL);
+    todoWeb3 = await TodoWeb3.deploy();
 
     // Create task
     let transaction = await todoWeb3.connect(deployer).createTask(CONTENT);
