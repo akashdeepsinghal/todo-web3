@@ -96,10 +96,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    loadBlockchainData();
-  }, []);
-
   const handleKeyDown = async (e) => {
     if (e.key === "Enter") {
       console.log("do validate");
@@ -107,6 +103,20 @@ function App() {
       await addTask(inputTask);
     }
   };
+
+  const clearCompleted = async () => {
+    // Clear completed tasks
+    const signer = await provider.getSigner();
+    let transaction = await todoWeb3.connect(signer).clearCompletedTasks();
+    await transaction.wait();
+    setNewTask("");
+
+    await getAllTasks(todoWeb3);
+  };
+
+  useEffect(() => {
+    loadBlockchainData();
+  }, []);
 
   return (
     <>
@@ -148,7 +158,11 @@ function App() {
               Completed
             </span>
           </div>
-          <button className="clear-btn" hidden={activeFilter === "pending"}>
+          <button
+            className="clear-btn active"
+            hidden={activeFilter === "pending"}
+            onClick={clearCompleted}
+          >
             Clear completed
           </button>
         </div>

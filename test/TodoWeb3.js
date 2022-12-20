@@ -8,7 +8,7 @@ const tokens = (n) => {
 describe("TodoWeb3", () => {
   let todoWeb3;
   let deployer;
-  const CONTENT = "Get vegetables";
+  const CONTENT = "Task 1";
   beforeEach(async () => {
     // Setup accounts
     [deployer] = await ethers.getSigners();
@@ -33,13 +33,35 @@ describe("TodoWeb3", () => {
   describe("Complete Task", async () => {
     // Completes task
     beforeEach(async () => {
-      transaction = await todoWeb3.connect(deployer).toggleCompleted(1);
+      const transaction = await todoWeb3.connect(deployer).toggleCompleted(1);
       await transaction.wait();
     });
     it("completes the task", async () => {
       const result = await todoWeb3.tasks(1);
       expect(result.content).to.be.equal(CONTENT);
       expect(result.completed).to.be.equal(true);
+    });
+  });
+
+  describe("Clear completed tasks", async () => {
+    // Completes task
+    beforeEach(async () => {
+      let transaction = await todoWeb3.connect(deployer).createTask("Task 2");
+      await transaction.wait();
+      transaction = await todoWeb3.connect(deployer).toggleCompleted(1);
+      await transaction.wait();
+      await todoWeb3.clearCompletedTasks();
+    });
+    it("updates the taskCount", async () => {
+      const result = await todoWeb3.taskCount();
+      expect(result.toString()).to.be.equal("1");
+    });
+    it("updates the tasks", async () => {
+      let result = await todoWeb3.tasks(1);
+      console.log(result);
+      result = await todoWeb3.tasks(2);
+      console.log(result);
+      expect(result.content).to.be.equal("Task 2");
     });
   });
 });

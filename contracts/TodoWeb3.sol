@@ -26,4 +26,14 @@ contract TodoWeb3 {
         tasks[_id].completed = !tasks[_id].completed;
         emit TaskCompleted(_id, tasks[_id].completed);
     }
+
+    function clearCompletedTasks() public {
+        for (uint256 i = 1; i <= taskCount; i++) {
+            if (tasks[i].completed) {
+                // tasks[i] = Task(tasks[i].id, "", false);
+                delete tasks[i];
+                taskCount--;
+            }
+        }
+    }
 }
